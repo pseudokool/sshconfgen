@@ -6,6 +6,7 @@ config = {
     "defaultUser": "ubuntu",
     "pathToGenerated": "output/",
     "filePrefix": "",
+    "hostTag": "nick",
     "groupTag": "Team"
 }
 
@@ -19,12 +20,7 @@ for vm in vms['Reservations']:
     vm_instances = vm['Instances']
     
     for instance in vm_instances: 
-        # print(instance["Tags"])
-        
-        # for tag in instance["Tags"]:
-        #     if tag['Key'] == 'Name':
-        #        print(f'Instance: {tag["Value"]}') 
-        
+
         # get/set InstanceId:
         instanceID = instance["InstanceId"]
         print(f'\n\ninstanceID')
@@ -50,15 +46,15 @@ for vm in vms['Reservations']:
 
         # get/set HostName:
         try:
+            # networkInterfaces = instance["NetworkInterfaces"]
+            # associations = next((item for item in instance["NetworkInterfaces"] if item["Association"]), None)
+            # hostName = associations['Association']["PublicIp"]
             hostName = instance["PublicIpAddress"]
         except:
             hostName = None
         finally:
             print(hostName)
 
-        # networkInterfaces = instance["NetworkInterfaces"]
-        # associations = next((item for item in instance["NetworkInterfaces"] if item["Association"]), None)
-        # hostName = associations['Association']["PublicIp"]
         print(hostName)
 
         # derive User:
@@ -92,7 +88,7 @@ for vm in vms['Reservations']:
         config_file = f'{config["pathToGenerated"]}{groupTag}.sshcfg'
 
         with open(config_file, 'a') as f:
-            f.write(f'\n\n# For: {host}')
+            f.write(f'\n\n# For: {hostFor}')
             f.write(f'\nHost {host}')
             f.write(f'\n  HostName {hostName}')
             f.write(f'\n  User {user}')
