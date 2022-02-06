@@ -4,9 +4,14 @@ from textwrap import indent
 config = {
     "pathToKeystore": "~/dev/keystores/",
     "defaultUser": "ubuntu",
-    "generatedConfigs": "output/"
+    "pathToGenerated": "output/",
+    "filePrefix": "",
+    "groupTag": "Team"
 }
 
+# make api call
+
+# cached api response
 with open('aws.json') as f:
     vms = json.loads(f.read())
 
@@ -72,11 +77,25 @@ for vm in vms['Reservations']:
         # set any other param
 
         # write to config  
-        with open(f'{config["generatedConfigs"]}sshd.conf', 'a') as f:
-            f.write(f'\n# For: {host}')
+        if config["groupTag"] != "":
+            try:   
+                groupTag = next((item for item in instance["Tags"] if item["Key"] == config["groupTag"]), None)
+                groupTag = groupTag["Value"]
+            except:
+                print("EGroupTag")
+                groupTag = "autogen"
+            finally:
+                print(groupTag)
+        else:
+            groupTag = "autogen"
+        
+        config_file = f'{config["pathToGenerated"]}{groupTag}.sshcfg'
+
+        with open(config_file, 'a') as f:
+            f.write(f'\n\n# For: {host}')
             f.write(f'\nHost {host}')
             f.write(f'\n  HostName {hostName}')
             f.write(f'\n  User {user}')
-            f.write(f'\n  IdentityFile {config["pathToKeystore"]}{keyName}\n')
+            f.write(f'\n  IdentityFile {config["pathToKeystore"]}{keyName}')
 
     # sys.exit()
