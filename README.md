@@ -8,7 +8,8 @@ Seeks to alleviate the pains when having to access (and maintain) a large number
 
 Generate cached API response (to be automated in the next release)
 ```
-aws ec2 describe-instances --profile <aws_profile> > aws.json --region <for ex. us-west-1>
+aws ec2 describe-instances --profile <aws_profile> --region <us-west-1>  > aws.json
+<region -- for ex. us-west-1>
 ```
 
 Include the generated configs to the main ssh config
